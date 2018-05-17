@@ -1,1 +1,1 @@
-custom reddit bot with python
+Custom reddit bot with python

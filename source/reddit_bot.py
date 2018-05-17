@@ -1,25 +1,24 @@
 import praw
 import config
 import time
+from datetime import datetime
 import os
 
 zero_two_alias = ['Zero Two', 'zerotwo', 'ZeroTwo', 'zero two', 'Zerotwo', '002']
 
 
 def bot_login():
-    r = praw.Reddit(username = config.username,
+    reddit = praw.Reddit(username = config.username,
                 password = config.password,
                 client_id = config.client_id,
                 client_secret = config.client_secret,
                 user_agent = "002-Post-Responder v0.1")
-    return r
+    return reddit
 
 def run_bot(r, comment_replied_list):
-    print('Entering run_bot')
     for comment in r.subreddit('AlphaHunter').comments(limit=50):
         if 'Zero Two'in comment.body or 'zerotwo' in comment.body or 'ZeroTwo' in comment.body or 'zero two' in comment.body or 'Zerotwo' in comment.body or '002' in comment.body:
             if comment.id not in comment_replied_list and comment.author != r.user.me():
-                print('String Found, Replying!')
                 comment.upvote()
                 comment.reply('[Must Protecc!!](https://imgur.com/gallery/p6hKI)')
                 print('Replied to ' + comment.id)
@@ -37,19 +36,17 @@ def  get_comment_list():
 def writing_to_list(content):
 
     with open('comment_list.txt', 'a') as file:
-        print('Writing the comment')
         file.write('{}'.format(content) + '\n')
     file.close()
 
 def main():
     r = bot_login()
-    print('Getting the comments')
     comment_list = get_comment_list()
-    print(comment_list)
     while True:
         run_bot(r, comment_list)
-        print('End of Loop')
-        time.sleep(5)
+        print('Done Running At --', time.ctime())
+        # datetime.now().strftime('%m/%d/%Y - %H:%M:%S PST')
+        time.sleep(10)
 
 
 main()
